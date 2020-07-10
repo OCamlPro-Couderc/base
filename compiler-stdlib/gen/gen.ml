@@ -61,7 +61,8 @@ let () =
     let toc : Cmo_format.library = input_value ic in
     close_in ic;
     let units =
-      List.map toc.lib_units ~f:(fun cu -> cu.Cmo_format.cu_name)
+      List.map toc.lib_units
+        ~f:(fun cu -> Compilation_unit.Name.to_string cu.Cmo_format.cu_name)
       |> List.sort ~cmp:String.compare
     in
     let max_len =
