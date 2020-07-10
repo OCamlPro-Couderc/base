@@ -10,12 +10,14 @@ let () =
     | _ -> failwith "bad command line arguments"
   in
   try
+    Persistent_env.Current_unit.set Compilation_unit.(name none);
     let cmi = Cmi_format.read_cmi cmi_fn in
     let buf = Buffer.create 512 in
     let pp = Format.formatter_of_buffer buf in
     Format.pp_set_margin pp max_int;
     (* so we can parse line by line below *)
-    Format.fprintf pp "%a@." Printtyp.signature cmi.Cmi_format.cmi_sign;
+    Format.fprintf pp "%a@."
+      (Printtyp.compilation_unit ~full:false) cmi.Cmi_format.cmi_type;
     let s = Buffer.contents buf in
     let lines = Str.split (Str.regexp "\n") s in
     Printf.fprintf oc "[@@@warning \"-3\"]\n\n";
